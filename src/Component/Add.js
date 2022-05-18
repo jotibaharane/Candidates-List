@@ -1,20 +1,42 @@
 import { Box, Container } from "@mui/system";
 import React, { useState } from "react";
 
+const exp = {
+  companyname: "",
+  duration: "",
+  responsibilities: "",
+};
+
 function Add() {
   const [data, setData] = useState({
     firstname: "",
     lastname: "",
+    email: "",
+    address: "",
+    state: "",
+    country: "",
+    skill: [],
+    experience: [exp, exp],
   });
   const handelsubmit = (e) => {
     e.preventDefault();
   };
 
   const handelchange = (e) => {
-    setData({
-      ...data,
-      [e.target.name]: e.target.value,
-    });
+    console.log(data);
+    if (e.target.type === "checkbox") {
+      if (e.target.checked) {
+        data.skill.push(e.target.value);
+      } else {
+        let a = data.skill.indexOf(e.target.value);
+        data.skill.splice(a, 1);
+      }
+    } else {
+      setData({
+        ...data,
+        [e.target.name]: e.target.value,
+      });
+    }
   };
 
   return (
@@ -22,229 +44,292 @@ function Add() {
       <Container maxWidth="lg">
         <form onSubmit={handelsubmit}>
           <main>
-            <div class="py-5 text-center">
+            <div className="py-5 text-center">
               <h2>Add Candidate</h2>
             </div>
 
-            <div class="row g-5">
-              <div class="col-md-7 col-lg-8 ms-auto me-auto">
-                <h4 class="mb-3">Basic Info</h4>
-                <div class="row g-3">
-                  <div class="col-sm-6">
-                    <label class="form-label">First name</label>
+            <div className="row g-5">
+              <div className="col-md-7 col-lg-8 ms-auto me-auto">
+                <h4 className="mb-3">Basic Info</h4>
+                <div className="row g-3">
+                  <div className="col-sm-6">
+                    <label className="form-label">First name</label>
                     <input
                       type="text"
-                      class="form-control"
+                      className="form-control"
                       name="firstname"
                       value={data.firstname}
                       onChange={handelchange}
                     />
                   </div>
 
-                  <div class="col-sm-6">
-                    <label class="form-label">Last name</label>
+                  <div className="col-sm-6">
+                    <label className="form-label">Last name</label>
                     <input
                       type="text"
-                      class="form-control"
+                      className="form-control"
                       name="lastname"
                       value={data.lastname}
                       onChange={handelchange}
                     />
                   </div>
 
-                  <div class="col-12">
-                    <label class="form-label">Gender</label>
+                  <div className="col-12">
+                    <label className="form-label">Gender</label>
                     <div>
-                      <div class="form-check form-check-inline">
+                      <div className="form-check form-check-inline">
                         <input
-                          class="form-check-input"
+                          className="form-check-input"
                           type="radio"
                           name="gender"
-                          value={data.gender}
+                          value="male"
                           onChange={handelchange}
                         />
-                        <label class="form-check-label">Male</label>
+                        <label className="form-check-label">Male</label>
                       </div>
-                      <div class="form-check form-check-inline">
+                      <div className="form-check form-check-inline">
                         <input
-                          class="form-check-input"
+                          className="form-check-input"
                           type="radio"
                           name="gender"
-                          value={data.gender}
+                          value="Female"
                           onChange={handelchange}
                         />
-                        <label class="form-check-label">Female</label>
+                        <label className="form-check-label">Female</label>
                       </div>
-                      <div class="form-check form-check-inline">
+                      <div className="form-check form-check-inline">
                         <input
-                          class="form-check-input"
+                          className="form-check-input"
                           type="radio"
                           name="gender"
-                          value={data.gender}
+                          value="Other"
                           onChange={handelchange}
                         />
-                        <label class="form-check-label">Other</label>
+                        <label className="form-check-label">Other</label>
                       </div>
                     </div>
                   </div>
 
-                  <div class="col-12">
-                    <label class="form-label">Email</label>
+                  <div className="col-12">
+                    <label className="form-label">Email</label>
                     <input
                       type="email"
-                      class="form-control"
+                      className="form-control"
                       placeholder="you@example.com"
+                      name="email"
+                      value={data.email}
+                      onChange={handelchange}
                     />
                   </div>
 
-                  <div class="col-12">
-                    <label class="form-label">Address</label>
+                  <div className="col-12">
+                    <label className="form-label">Address</label>
                     <textarea
-                      class="form-control"
+                      className="form-control"
                       placeholder="1234 Main St"
-                    ></textarea>
+                      name="address"
+                      value={data.address}
+                      onChange={handelchange}
+                    />
                   </div>
 
-                  <div class="col-md-5">
-                    <label class="form-label">Country</label>
-                    <select class="form-select">
+                  <div className="col-md-5">
+                    <label className="form-label">Country</label>
+                    <select
+                      className="form-select"
+                      name="country"
+                      value={data.country}
+                      onChange={handelchange}
+                    >
                       <option value="">Choose...</option>
                       <option>India</option>
                       <option>United States</option>
                     </select>
                   </div>
 
-                  <div class="col-md-4">
-                    <label class="form-label">State</label>
-                    <select class="form-select">
+                  <div className="col-md-4">
+                    <label className="form-label">State</label>
+                    <select
+                      className="form-select"
+                      name="state"
+                      value={data.state}
+                      onChange={handelchange}
+                    >
                       <option value="">Choose...</option>
                       <option>Maharashtra</option>
                       <option>Karnataka</option>
                     </select>
                   </div>
 
-                  <div class="col-md-3">
-                    <label class="form-label">Pin / Zip</label>
-                    <input type="text" class="form-control" />
+                  <div className="col-md-3">
+                    <label className="form-label">Pin / Zip</label>
+                    <input type="text" className="form-control" />
                   </div>
                 </div>
 
-                <hr class="my-4" />
+                <hr className="my-4" />
 
-                <h4 class="mb-3">Professional Info</h4>
+                <h4 className="mb-3">Professional Info</h4>
 
-                <div class="row g-3">
-                  <div class="col-12">
-                    <label class="form-label">
+                <div className="row g-3">
+                  <div className="col-12">
+                    <label className="form-label">
                       Choose your skills
-                      <span class="small text-muted">(min 3 skills)</span>
+                      <span className="small text-muted">(min 3 skills)</span>
                     </label>
-                    <div class="mb-3">
-                      <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" />
-                        <label class="form-check-label">Angular</label>
+                    <div className="mb-3">
+                      <div className="form-check form-check-inline">
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          name="skill"
+                          value="Angular"
+                          onChange={handelchange}
+                        />
+                        <label className="form-check-label">Angular</label>
                       </div>
-                      <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" />
-                        <label class="form-check-label">React</label>
+                      <div className="form-check form-check-inline">
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          name="skill"
+                          value="React"
+                          onChange={handelchange}
+                        />
+                        <label className="form-check-label">React</label>
                       </div>
-                      <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" />
-                        <label class="form-check-label">Node.JS</label>
+                      <div className="form-check form-check-inline">
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          name="skill"
+                          value="Node.JS"
+                          onChange={handelchange}
+                        />
+                        <label className="form-check-label">Node.JS</label>
                       </div>
-                      <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" />
-                        <label class="form-check-label">JavaScript</label>
+                      <div className="form-check form-check-inline">
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          name="skill"
+                          value="JavaScript"
+                          onChange={handelchange}
+                        />
+                        <label className="form-check-label">JavaScript</label>
                       </div>
-                      <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" />
-                        <label class="form-check-label">Flutter</label>
+                      <div className="form-check form-check-inline">
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          name="skill"
+                          value="Flutter"
+                          onChange={handelchange}
+                        />
+                        <label className="form-check-label">Flutter</label>
                       </div>
-                      <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" />
-                        <label class="form-check-label">Java</label>
+                      <div className="form-check form-check-inline">
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          name="skill"
+                          value="Java"
+                          onChange={handelchange}
+                        />
+                        <label className="form-check-label">Java</label>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div class="row gy-3">
-                  <div class="col-12">
-                    <label class="form-label">
+                <div className="row gy-3">
+                  <div className="col-12">
+                    <label className="form-label">
                       <strong>
                         Experience
-                        <span class="small text-muted">
+                        <span className="small text-muted">
                           (min 2, max 5 items)
                         </span>
                       </strong>
                     </label>
-                    <div class="card mx-3 mt-3">
-                      <div class="card-body">
-                        <h6 class="card-title text-muted mb-3">
-                          Experience #1
-                          <a href="#" class="float-end text-danger fw-normal">
-                            Remove
-                          </a>
-                        </h6>
-                        <div class="row g-3">
-                          <div class="col-6">
-                            <label class="form-label">Company Name</label>
-                            <input type="text" class="form-control" />
-                          </div>
-                          <div class="col-6">
-                            <label class="form-label">
-                              Duration{" "}
-                              <span class="text-muted">(in months)</span>
-                            </label>
-                            <input type="number" class="form-control" />
-                          </div>
-                          <div class="col-12">
-                            <label class="form-label">
-                              Describe your responsibilities
-                            </label>
-                            <textarea class="form-control"></textarea>
+
+                    {data.experience.map((data,id) => {
+                     return (<div className="card mx-3 mt-3" key={id}>
+                        <div className="card-body">
+                          <h6 className="card-title text-muted mb-3">
+                            Experience #{id+1}
+                            <a
+                              href="#"
+                              className="float-end text-danger fw-normal"
+                              onClick={()=>data.experience.splice(id,1)}
+                            >
+                              Remove
+                            </a>
+                          </h6>
+                          <div className="row g-3">
+                            <div className="col-6">
+                              <label className="form-label">Company Name</label>
+                              <input type="text" className="form-control" />
+                            </div>
+                            <div className="col-6">
+                              <label className="form-label">
+                                Duration{" "}
+                                <span className="text-muted">(in months)</span>
+                              </label>
+                              <input type="number" className="form-control" />
+                            </div>
+                            <div className="col-12">
+                              <label className="form-label">
+                                Describe your responsibilities
+                              </label>
+                              <textarea className="form-control"></textarea>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </div>
-                    <div class="card mx-3 mt-3">
-                      <div class="card-body">
-                        <h6 class="card-title text-muted mb-3">
+                      </div>)
+                    })}
+
+                    <div className="card mx-3 mt-3">
+                      <div className="card-body">
+                        <h6 className="card-title text-muted mb-3">
                           Experience #2
-                          <a href="#" class="float-end text-danger fw-normal">
+                          <a
+                            href="#"
+                            className="float-end text-danger fw-normal"
+                          >
                             Remove
                           </a>
                         </h6>
-                        <div class="row g-3">
-                          <div class="col-6">
-                            <label class="form-label">Company Name</label>
-                            <input type="text" class="form-control" />
+                        <div className="row g-3">
+                          <div className="col-6">
+                            <label className="form-label">Company Name</label>
+                            <input type="text" className="form-control" />
                           </div>
-                          <div class="col-6">
-                            <label class="form-label">
+                          <div className="col-6">
+                            <label className="form-label">
                               Duration{" "}
-                              <span class="text-muted">(in months)</span>
+                              <span className="text-muted">(in months)</span>
                             </label>
-                            <input type="number" class="form-control" />
+                            <input type="number" className="form-control" />
                           </div>
-                          <div class="col-12">
-                            <label class="form-label">
+                          <div className="col-12">
+                            <label className="form-label">
                               Describe your responsibilities
                             </label>
-                            <textarea class="form-control"></textarea>
+                            <textarea className="form-control"></textarea>
                           </div>
                         </div>
                       </div>
                     </div>
-                    <a class="d-block mt-3" href="#">
+                    <a className="d-block mt-3" href="#">
                       Add more experience
                     </a>
                   </div>
                 </div>
 
-                <hr class="my-4" />
+                <hr className="my-4" />
 
-                <button class="btn btn-primary" type="submit">
+                <button className="btn btn-primary" type="submit">
                   Save Candidate
                 </button>
               </div>
