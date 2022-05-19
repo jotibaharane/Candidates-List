@@ -1,13 +1,19 @@
 import { Box, Container } from "@mui/system";
 import React, { useState } from "react";
-
-const exp = {
+import { useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
+let a = {
   companyname: "",
   duration: "",
   responsibilities: "",
 };
-
 function Add() {
+  const navigate = useNavigate();
+  const [list, setList] = useState(
+    JSON.parse(localStorage.getItem("list"))
+      ? JSON.parse(localStorage.getItem("list"))
+      : []
+  );
   const [data, setData] = useState({
     firstname: "",
     lastname: "",
@@ -15,15 +21,25 @@ function Add() {
     address: "",
     state: "",
     country: "",
+    pin: "",
     skill: [],
-    experience: [exp, exp],
+    experience: [a, a],
   });
   const handelsubmit = (e) => {
     e.preventDefault();
+    console.log(data);
+    if (data.skill.length > 2) {
+      localStorage.setItem(
+        "list",
+        JSON.stringify([...list, { ...data, id: uuidv4() }])
+      );
+      navigate("/");
+    } else {
+      alert("min 3 skill required");
+    }
   };
 
   const handelchange = (e) => {
-    console.log(data);
     if (e.target.type === "checkbox") {
       if (e.target.checked) {
         data.skill.push(e.target.value);
@@ -37,6 +53,35 @@ function Add() {
         [e.target.name]: e.target.value,
       });
     }
+  };
+
+  const handexp = (e, i) => {
+    let newFormValue = [...data.experience];
+    if (newFormValue.length < 6) {
+      newFormValue[i] = {
+        ...newFormValue[i],
+        [e.target.name]: e.target.value,
+        id: uuidv4(),
+      };
+      setData({ ...data, experience: newFormValue });
+    } else {
+      alert("max 5 exp alowed");
+    }
+  };
+
+  const handelremove = (id) => {
+    let newFormValue = [...data.experience];
+    if (newFormValue.length > 2) {
+      newFormValue.splice(id, 1);
+      setData({ ...data, experience: newFormValue });
+    } else {
+      alert("min 2 exp require");
+    }
+  };
+  const handeladd = () => {
+    let newFormValue = [...data.experience];
+    newFormValue.push(a);
+    setData({ ...data, experience: newFormValue });
   };
 
   return (
@@ -56,10 +101,15 @@ function Add() {
                     <label className="form-label">First name</label>
                     <input
                       type="text"
-                      className="form-control"
+                      className={
+                        data.firstname
+                          ? "form-control is-valid"
+                          : "form-control is-invalid"
+                      }
                       name="firstname"
                       value={data.firstname}
                       onChange={handelchange}
+                      required
                     />
                   </div>
 
@@ -67,7 +117,11 @@ function Add() {
                     <label className="form-label">Last name</label>
                     <input
                       type="text"
-                      className="form-control"
+                      className={
+                        data.lastname
+                          ? "form-control is-valid"
+                          : "form-control is-invalid"
+                      }
                       name="lastname"
                       value={data.lastname}
                       onChange={handelchange}
@@ -79,7 +133,11 @@ function Add() {
                     <div>
                       <div className="form-check form-check-inline">
                         <input
-                          className="form-check-input"
+                          className={
+                            data.gender
+                              ? "form-check-input is-valid"
+                              : "form-check-input is-invalid"
+                          }
                           type="radio"
                           name="gender"
                           value="male"
@@ -89,7 +147,11 @@ function Add() {
                       </div>
                       <div className="form-check form-check-inline">
                         <input
-                          className="form-check-input"
+                          className={
+                            data.gender
+                              ? "form-check-input is-valid"
+                              : "form-check-input is-invalid"
+                          }
                           type="radio"
                           name="gender"
                           value="Female"
@@ -99,7 +161,11 @@ function Add() {
                       </div>
                       <div className="form-check form-check-inline">
                         <input
-                          className="form-check-input"
+                          className={
+                            data.gender
+                              ? "form-check-input is-valid"
+                              : "form-check-input is-invalid"
+                          }
                           type="radio"
                           name="gender"
                           value="Other"
@@ -114,18 +180,27 @@ function Add() {
                     <label className="form-label">Email</label>
                     <input
                       type="email"
-                      className="form-control"
+                      className={
+                        data.email
+                          ? "form-control is-valid"
+                          : "form-control is-invalid"
+                      }
                       placeholder="you@example.com"
                       name="email"
                       value={data.email}
                       onChange={handelchange}
+                      required
                     />
                   </div>
 
                   <div className="col-12">
                     <label className="form-label">Address</label>
                     <textarea
-                      className="form-control"
+                      className={
+                        data.address
+                          ? "form-control is-valid"
+                          : "form-control is-invalid"
+                      }
                       placeholder="1234 Main St"
                       name="address"
                       value={data.address}
@@ -136,7 +211,11 @@ function Add() {
                   <div className="col-md-5">
                     <label className="form-label">Country</label>
                     <select
-                      className="form-select"
+                      className={
+                        data.country
+                          ? "form-select is-valid"
+                          : "form-select is-invalid"
+                      }
                       name="country"
                       value={data.country}
                       onChange={handelchange}
@@ -150,7 +229,11 @@ function Add() {
                   <div className="col-md-4">
                     <label className="form-label">State</label>
                     <select
-                      className="form-select"
+                      className={
+                        data.state
+                          ? "form-select is-valid"
+                          : "form-select is-invalid"
+                      }
                       name="state"
                       value={data.state}
                       onChange={handelchange}
@@ -163,7 +246,18 @@ function Add() {
 
                   <div className="col-md-3">
                     <label className="form-label">Pin / Zip</label>
-                    <input type="text" className="form-control" />
+                    <input
+                      type="number"
+                      name="pin"
+                      value={data.pin}
+                      onChange={handelchange}
+                      className={
+                        data.pin
+                          ? "form-control is-valid"
+                          : "form-control is-invalid"
+                      }
+                      required
+                    />
                   </div>
                 </div>
 
@@ -253,75 +347,78 @@ function Add() {
                       </strong>
                     </label>
 
-                    {data.experience.map((data,id) => {
-                     return (<div className="card mx-3 mt-3" key={id}>
-                        <div className="card-body">
-                          <h6 className="card-title text-muted mb-3">
-                            Experience #{id+1}
-                            <a
-                              href="#"
-                              className="float-end text-danger fw-normal"
-                              onClick={()=>data.experience.splice(id,1)}
-                            >
-                              Remove
-                            </a>
-                          </h6>
-                          <div className="row g-3">
-                            <div className="col-6">
-                              <label className="form-label">Company Name</label>
-                              <input type="text" className="form-control" />
-                            </div>
-                            <div className="col-6">
-                              <label className="form-label">
-                                Duration{" "}
-                                <span className="text-muted">(in months)</span>
-                              </label>
-                              <input type="number" className="form-control" />
-                            </div>
-                            <div className="col-12">
-                              <label className="form-label">
-                                Describe your responsibilities
-                              </label>
-                              <textarea className="form-control"></textarea>
+                    {data.experience.map((data, id) => {
+                      return (
+                        <div className="card mx-3 mt-3" key={id}>
+                          <div className="card-body">
+                            <h6 className="card-title text-muted mb-3">
+                              Experience #{id + 1}
+                              <a
+                                href="#"
+                                className="float-end text-danger fw-normal"
+                                onClick={() => handelremove(id)}
+                              >
+                                Remove
+                              </a>
+                            </h6>
+                            <div className="row g-3">
+                              <div className="col-6">
+                                <label className="form-label">
+                                  Company Name
+                                </label>
+                                <input
+                                  type="text"
+                                  className={
+                                    data.companyname
+                                      ? "form-control is-valid"
+                                      : "form-control is-invalid"
+                                  }
+                                  value={data.companyname}
+                                  name="companyname"
+                                  onChange={(e) => handexp(e, id)}
+                                />
+                              </div>
+                              <div className="col-6">
+                                <label className="form-label">
+                                  Duration{" "}
+                                  <span className="text-muted">
+                                    (in months)
+                                  </span>
+                                </label>
+                                <input
+                                  type="number"
+                                  className={
+                                    data.duration
+                                      ? "form-control is-valid"
+                                      : "form-control is-invalid"
+                                  }
+                                  value={data.duration}
+                                  name="duration"
+                                  onChange={(e) => handexp(e, id)}
+                                />
+                              </div>
+                              <div className="col-12">
+                                <label className="form-label">
+                                  Describe your responsibilities
+                                </label>
+                                <textarea
+                                  className={
+                                    data.responsibilities
+                                      ? "form-control is-valid"
+                                      : "form-control is-invalid"
+                                  }
+                                  value={data.responsibilities}
+                                  name="responsibilities"
+                                  onChange={(e) => handexp(e, id)}
+                                />
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>)
+                      );
                     })}
 
-                    <div className="card mx-3 mt-3">
-                      <div className="card-body">
-                        <h6 className="card-title text-muted mb-3">
-                          Experience #2
-                          <a
-                            href="#"
-                            className="float-end text-danger fw-normal"
-                          >
-                            Remove
-                          </a>
-                        </h6>
-                        <div className="row g-3">
-                          <div className="col-6">
-                            <label className="form-label">Company Name</label>
-                            <input type="text" className="form-control" />
-                          </div>
-                          <div className="col-6">
-                            <label className="form-label">
-                              Duration{" "}
-                              <span className="text-muted">(in months)</span>
-                            </label>
-                            <input type="number" className="form-control" />
-                          </div>
-                          <div className="col-12">
-                            <label className="form-label">
-                              Describe your responsibilities
-                            </label>
-                            <textarea className="form-control"></textarea>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <a className="d-block mt-3" href="#">
+                    <a className="d-block mt-3" href="#" onClick={handeladd}>
                       Add more experience
                     </a>
                   </div>

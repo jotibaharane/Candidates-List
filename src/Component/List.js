@@ -3,76 +3,85 @@ import * as React from "react";
 import { Box, Button, Container } from "@mui/material";
 import { Navigate, useNavigate } from "react-router-dom";
 
-
-
-
 function List() {
-  const navigate=useNavigate()
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const navigate = useNavigate();
+  const [list, setList] = React.useState(
+    JSON.parse(localStorage.getItem("list"))
+      ? JSON.parse(localStorage.getItem("list"))
+      : []
+  );
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
+  const remove = (id) => {
+    let a = list.filter((data) => data.id !== id);
+    localStorage.setItem("list", JSON.stringify(a));
+    setList(a);
   };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
-
-
 
   return (
     <Box sx={{ minWidth: "100%" }}>
       <Container maxWidth="lg">
-      <main>
-            <div class="py-5">
-                <h2>
-                    Candidates List
-                    <button class="btn btn-primary float-end">Add Candidate</button>
-                </h2>
-            </div>
+        <main>
+          <div className="py-5">
+            <h2>
+              Candidates List
+              <button
+                className="btn btn-primary float-end"
+                onClick={() => navigate("/add")}
+              >
+                Add Candidate
+              </button>
+            </h2>
+          </div>
 
-            <div class="row">
-                <div class="col-12 ms-auto me-auto">
-                    <div class="card">
-                        <div class="card-body">
-                            <table class="table">
-                                <tr>
-                                    <th>#</th>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Number of Skills</th>
-                                    <th>Total Work Experience (in months)</th>
-                                    <th>Actions</th>
-                                </tr>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Abhijit Borade</td>
-                                    <td>abhijit@angularminds.com</td>
-                                    <td>5</td>
-                                    <td>60</td>
-                                    <td>
-                                        <a href="#">Edit</a>
-                                        <a href="#" class="text-danger ms-2">Delete</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>Abhijit Borade</td>
-                                    <td>abhijit@angularminds.com</td>
-                                    <td>5</td>
-                                    <td>60</td>
-                                    <td>
-                                        <a href="#">Edit</a>
-                                        <a href="#" class="text-danger ms-2">Delete</a>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
+          <div className="row">
+            <div className="col-12 ms-auto me-auto">
+              <div className="card">
+                <div className="card-body">
+                  <table className="table">
+                    <tbody>
+                      <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Number of Skills</th>
+                        <th>Total Work Experience (in months)</th>
+                        <th>Actions</th>
+                      </tr>
+
+                      {list.map((data, id) => {
+                        let val = 0;
+                        return (
+                          <tr key={data.id}>
+                            <td>{id + 1}</td>
+                            <td>
+                              {data.firstname} {data.lastname}
+                            </td>
+                            <td>{data.email}</td>
+                            <td>{data.skill.length}</td>
+                            <td>
+                              {data.experience
+                                .map((datum) => Number(datum.duration))
+                                .reduce((a, b) => a + b)}
+                            </td>
+                            <td>
+                              <a href={`/edit/${data.id}`}>Edit</a>
+                              <a
+                                href="/"
+                                className="text-danger ms-2"
+                                onClick={() => remove(data.id)}
+                              >
+                                Delete
+                              </a>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
                 </div>
+              </div>
             </div>
+          </div>
         </main>
       </Container>
     </Box>
